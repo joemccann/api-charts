@@ -180,7 +180,7 @@ const fetchChartData = async (args) => {
   let candles = null
 
   //
-  // Must be UNIX timestamps in milliseconds
+  // Must be Unix timestamps in milliseconds
   //
   if (start) start = parseInt(start)
   if (end) end = parseInt(end)
@@ -294,7 +294,7 @@ exports['api-charts'] = async (req, res) => {
 
   if (assets) {
     //
-    // Clean and normalizeChartData the asset pairs.
+    // Clean and normalize the asset pairs.
     //
     assets = assets.map(asset => asset.toUpperCase().trim())
 
