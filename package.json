@@ -1,0 +1,30 @@
+{
+  "name": "api-charts",
+  "version": "1.0.0",
+  "description": "📊 Opinionated, REST-ful API for fetching chart/candle data from a cryptocurrency exchange for an asset or set of assets.",
+  "main": "index.js",
+  "scripts": {
+    "pretest": "standard",
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joemccann/api-charts.git"
+  },
+  "keywords": [],
+  "author": "Joe McCann",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/joemccann/api-charts/issues"
+  },
+  "homepage": "https://github.com/joemccann/api-charts#readme",
+  "dependencies": {
+    "binance-api-node": "^0.9.0",
+    "gdax": "^0.8.0",
+    "moment": "^2.24.0"
+  },
+  "devDependencies": {
+    "standard": "^12.0.1",
+    "tape": "^4.10.1"
+  }
+}
