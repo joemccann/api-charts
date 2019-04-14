@@ -2,12 +2,22 @@ const test = require('tape')
 const { 'api-charts': charts } = require('.')
 
 //
-// Create a stubbed response object
+// Create a mock request and response method
 //
+
+function status (code) {
+  this.statusCode = code
+  return this
+}
+
+function send (obj) {
+  const body = { ...this, ...obj }
+  return body
+}
+
 const res = {
-  send: (body) => {
-    return body
-  }
+  status,
+  send
 }
 
 test('sanity', t => {
@@ -26,9 +36,10 @@ test('pass - charts for BTC-LTC for 1d on Coinbase with start & end dates'
         timeframe: '1d'
       }
     }
-    const { data } = await charts(req, res)
+    const { err, data, statusCode } = await charts(req, res)
+    t.equals(statusCode, 200)
+    t.ok(!err)
     t.ok(data)
-    console.log(data)
     t.end()
   })
 
@@ -43,9 +54,10 @@ test('pass - charts for BTC-LTC for 1d on Binance with start & end dates'
         timeframe: '1d'
       }
     }
-    const { data } = await charts(req, res)
+    const { err, data, statusCode } = await charts(req, res)
+    t.equals(statusCode, 200)
+    t.ok(!err)
     t.ok(data)
-    console.log(data)
     t.end()
   })
 
@@ -59,9 +71,10 @@ test('pass - charts for BTC-LTC for 1d on Coinbase with start date'
         timeframe: '1d'
       }
     }
-    const { data } = await charts(req, res)
+    const { err, data, statusCode } = await charts(req, res)
+    t.equals(statusCode, 200)
+    t.ok(!err)
     t.ok(data)
-    console.log(data)
     t.end()
   })
 
@@ -75,9 +88,10 @@ test('pass - charts for BTC-LTC for 1d on Binance with start date'
         timeframe: '1d'
       }
     }
-    const { data } = await charts(req, res)
+    const { err, data, statusCode } = await charts(req, res)
+    t.equals(statusCode, 200)
+    t.ok(!err)
     t.ok(data)
-    console.log(data)
     t.end()
   })
 
@@ -90,7 +104,9 @@ test('pass - charts for BTC-LTC, BTC-ZRX, USD-BTC for 1d on Coinbase',
         timeframe: '1d'
       }
     }
-    const { data } = await charts(req, res)
+    const { err, data, statusCode } = await charts(req, res)
+    t.equals(statusCode, 200)
+    t.ok(!err)
     t.ok(data)
     t.end()
   })
@@ -104,7 +120,9 @@ test('pass - charts for BTC-LTC, BTC-XRP, USDT-BTC for 1d on Binance',
         timeframe: '1d'
       }
     }
-    const { data } = await charts(req, res)
+    const { err, data, statusCode } = await charts(req, res)
+    t.equals(statusCode, 200)
+    t.ok(!err)
     t.ok(data)
     t.end()
   })
@@ -117,7 +135,9 @@ test('pass - charts for BTC-LTC for 1d on Coinbase', async t => {
       timeframe: '1d'
     }
   }
-  const { data } = await charts(req, res)
+  const { err, data, statusCode } = await charts(req, res)
+  t.equals(statusCode, 200)
+  t.ok(!err)
   t.ok(data)
   t.end()
 })
@@ -130,7 +150,9 @@ test('pass - charts for BTC-LTC for 1d on Binance', async t => {
       timeframe: '1d'
     }
   }
-  const { data } = await charts(req, res)
+  const { err, data, statusCode } = await charts(req, res)
+  t.equals(statusCode, 200)
+  t.ok(!err)
   t.ok(data)
   t.end()
 })
@@ -143,8 +165,10 @@ test('fail - charts for BTC-LTC for 4h timeframe on Coinbase', async t => {
       timeframe: '4h'
     }
   }
-  const { err } = await charts(req, res)
+  const { err, data, statusCode } = await charts(req, res)
   t.ok(err)
+  t.ok(!data)
+  t.equals(statusCode, 404)
   t.equals(err, `Timeframe, 4h, not supported on Coinbase.`)
   t.end()
 })
@@ -157,7 +181,9 @@ test('fail - charts for BTC-LTC for 16h timeframe on Binance', async t => {
       timeframe: '16h'
     }
   }
-  const { err } = await charts(req, res)
+  const { err, data, statusCode } = await charts(req, res)
+  t.ok(!data)
+  t.equals(statusCode, 404)
   t.ok(err)
   t.equals(err, `Timeframe, 16h, not supported on Binance.`)
   t.end()
@@ -171,8 +197,10 @@ test('fail - charts for BTC-XXX, BTC-YYY for 1d on Coinbase', async t => {
       timeframe: '1d'
     }
   }
-  const { data } = await charts(req, res)
+  const { err, data, statusCode } = await charts(req, res)
+  t.ok(!err)
   t.ok(data)
+  t.equals(statusCode, 200)
   t.deepEqual(data, [ { asset: 'BTC-XXX', err: 'HTTP 404 Error: NotFound' },
     { asset: 'BTC-YYY', err: 'HTTP 404 Error: NotFound' } ])
   t.end()
@@ -186,8 +214,10 @@ test('fail - charts for BTC-XXX, BTC-YYY for 1d on Binance', async t => {
       timeframe: '1d'
     }
   }
-  const { data } = await charts(req, res)
+  const { err, data, statusCode } = await charts(req, res)
+  t.ok(!err)
   t.ok(data)
+  t.equals(statusCode, 200)
   t.deepEqual(data, [ { asset: 'BTC-XXX', err: 'Invalid symbol.' },
     { asset: 'BTC-YYY', err: 'Invalid symbol.' } ])
   t.end()

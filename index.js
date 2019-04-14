@@ -299,16 +299,16 @@ exports['api-charts'] = async (req, res) => {
     assets = assets.map(asset => asset.toUpperCase().trim())
 
     const { err, data } = await multi({ assets, exchange, timeframe })
-    if (err) return res.send({ err: err.message })
-    return res.send({ data })
+    if (err) return res.status(404).send({ err: err.message })
+    return res.status(200).send({ data })
   } else {
     exchange = exchange.toUpperCase()
     asset = asset.toUpperCase()
 
     const { err, data } = await fetchChartData({ asset, exchange, timeframe })
 
-    if (err) return res.send({ err })
+    if (err) return res.status(404).send({ err })
 
-    return res.send({ data })
+    return res.status(200).send({ data })
   }
 }
