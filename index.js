@@ -1,4 +1,5 @@
 
+const cors = require('cors-for-cloud-functions')
 const Binance = require('binance-api-node')
 const binance = Binance.default()
 const { PublicClient: Coinbase } = require('gdax')
@@ -269,7 +270,11 @@ const multi = async (args) => {
   }
 }
 
-exports['api-charts'] = async (req, res) => {
+exports['api-charts'] = async (request, response) => {
+  const { req, res, isOptions } = cors(request, response)
+
+  if (isOptions) return res.status(204).send('')
+
   const {
     body = {},
     query = {}

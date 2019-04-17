@@ -80,6 +80,13 @@ gcloud functions deploy api-charts --runtime nodejs10 --trigger-http --memory 12
 
 You should receive a YAML like response in your terminal including the URL for the Cloud Function.
 
+## TESTS
+
+```sh
+npm i -D
+npm test
+```
+
 ## AUTHORS
 
 - [Joe McCann](https://twitter.com/joemccann)
